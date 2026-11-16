@@ -39,11 +39,11 @@ void *alloc(i16);
 void dealloc_all();
 void videomode(i8);
 void copy_(i8*,i8*,i16);
-i16 open(i8*,i16);
-i8 read(i16);
+i16 open(i8*,i32);
+i8 seek(i16,i32);
+i8 readn(i16,void*,i16);
 void close(i16);
 void init_heap();
-void readn(i16,void*,i16);
 /* Function Signatures */
 
 
