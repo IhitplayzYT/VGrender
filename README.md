@@ -70,6 +70,8 @@ gui.com
 
 The demo looks for `output.bmp` in the mounted directory. The current `output.bmp` is a 50×50, 24-bit BMP. To use another image without changing source, replace `output.bmp` with it or rename it to `output.bmp`. To use another filename or change the draw position, edit the `parse_bmp` call in `main.c`, rebuild with `make`, and run the new `gui.com`.
 
+https://github.com/user-attachments/assets/8d27ecab-cdd6-4642-b7f8-e6ea5bbf8024
+
 ## API examples
 
 The shape interfaces are declared in `include/shapes.h`. For example, the intended flow for drawing a horizontal line is:
