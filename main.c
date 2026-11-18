@@ -21,20 +21,23 @@ videomode(x640_480_16);
 //Palette_Table = set_all_palettes();
 //if (!Palette_Table) return;
 Bitmap * bmp = parse_bmp((i8*)"output",50,50);
-bmp_show(bmp);
-draw_bmp(bmp);
+if (bmp) {
+    bmp_show(bmp);
+    draw_bmp(bmp);
+}
 dealloc_all();
 return;
 }
 
-void readn(i16 fd, void* buf, i16 n) {
+i8 readn(i16 fd, void* buf, i16 n) {
     i8* p = buf;
-    for (i16 i=0; i<n; i++) {
-        i8 b = read(fd);
-        if (b == -1) {return;}
-        p[i] = b;
-        
+    i16 total = 0;
+    while (total < n) {
+        i16 got = x_read(fd, p + total, (i16)(n - total));
+        if (!got || got == 0xffff) return 0;
+        total += got;
     }
+    return 1;
 }
 
 
@@ -110,23 +113,17 @@ for (p=a,q=b;n;n--,p++,q++)*p = *q;
 }
 
 
-i16 open(i8* path,i16 offset){
+i16 open(i8* path,i32 offset){
 i16 fd = x_open(path); 
 if (!fd) return 0;
-i8 re = x_move(fd,offset);
-if (!re) {close(fd);return 0;}
+if (!seek(fd,offset)) {close(fd);return 0;}
 return fd;
 }
 
-i8 read(i16 fd){
-i16 n;
-i8 ah,al;
-n = x_read(fd);
-al = (n & 0xff);
-ah = ((n >> 8) & 0xff);
-if (ah) {print("error");return 0;}
-else 
-    return al;
+i8 seek(i16 fd,i32 offset){
+i16 low = (i16)(offset & 0xffff);
+i16 high = (i16)((offset >> 16) & 0xffff);
+return x_move(fd,low,high);
 }
 
 

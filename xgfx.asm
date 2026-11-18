@@ -13,7 +13,6 @@ global x_open
 global x_move
 global x_close
 global x_read
-global readbuf
 global x_set_palette
 
 heap1 dw _heap
@@ -117,7 +116,7 @@ x_open:
     jc .error
     jmp .end
     .error:
-        neg ax
+        xor ax,ax
     .end:
         mov sp,bp
         pop bp
@@ -127,8 +126,8 @@ x_move:
     mov bp,sp 
     mov ax,0x4200
     arg bx,0
-    xor cx,cx
     arg dx,1
+    arg cx,2
     clc
     int 0x21
     jc .error
@@ -156,27 +155,19 @@ x_close:
         mov sp,bp
         pop bp
         ret
-readbuf db 0x00
 x_read:
     push bp
     mov bp,sp
-
     mov ax,0x3f00
     arg bx,0
-    mov cx,0x01
-    mov dx,readbuf
-
+    arg dx,1
+    arg cx,2
     clc
     int 0x21
     jc .error
-
-    mov bx,readbuf
-    xor ax,ax
-    mov byte al,[bx]
     jmp .end
-
     .error:
-        mov ah,0xff
+        xor ax,ax
     .end:
     mov sp,bp
     pop bp
